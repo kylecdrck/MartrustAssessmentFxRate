@@ -1,12 +1,172 @@
 openapi: 3.0.0
 info:
   version: 1.0.0
-  title: Sample API
-  description: A sample API to illustrate OpenAPI concepts
+  title: MarTrust Assessment Exam - FX Rates Widget API
+  description: API for the FX Rates widget
+servers:
+  - url: http://localhost:8080/fxrates
+tags:
+  - name: FX Rates Widget
 paths:
-  /list:
+  /convert:
     get:
-      description: Returns a list of stuff
+      summary: Convert from one currency to another
+      tags:
+        - FX Rates Widget
+      description: Converts a currency value to another currency equivalent
+      parameters:
+        - in: query
+          name: from
+          description: 3-letter currency symbol (Case-insensitive)
+          required: true
+          example: USD
+        - in: query
+          name: to
+          description: 3-letter currency symbol (Case-insensitive)
+          required: true
+          example: PHP
+        - in: query
+          name: amount
+          description: Amount to convert from `from` currency to `to` currency
+          required: true
+          example: 1.5
+        - in: query
+          name: date
+          description: |
+            Specific date to base conversion rate from. Must be in YYYY-MM-DD format
+          example: 2022-06-11
       responses:
         '200':
           description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConversionResponse'
+        '400':
+          description: Invalid Conversion response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvalidConversionResponse'
+  /currencies:
+    get:
+      summary: Get a list of currencies
+      tags:
+        - FX Rates Widget
+      description: Returns a list of all available currencies
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CurrencyListResponse'
+  /currencies/symbols:
+    get:
+      summary: Get a list of currency symbols
+      tags:
+        - FX Rates Widget
+      description: Returns a list of all available currency symbols
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CurrencySymbolListResponse'
+components:
+  schemas:
+    ApiResponse:
+      type: object
+      required:
+        - timestamp
+        - resultMessage
+      properties:
+        timestamp:
+          description: UNIX-Timestamp of the completion of this response
+          type: integer
+          example: 1654968491
+        resultData:
+          description: The API response data
+          type: object
+          example:
+            sampleKey: sampleValue
+        resultMessage:
+          description: API operation message
+          type: string
+          example: Success.
+    CurrencyListResponse:
+      anyOf:
+        - $ref: '#/components/schemas/ApiResponse'
+      type: object
+      required:
+        - resultData
+      properties:
+        resultData:
+          type: array
+          items:
+            type: object
+            required:
+              - symbol
+              - name
+            properties:
+              symbol:
+                type: string
+                example: USD
+              name:
+                type: string
+                example: United States Dollar
+    CurrencySymbolListResponse:
+      anyOf:
+        - $ref: '#/components/schemas/ApiResponse'
+      type: object
+      required:
+        - resultData
+      properties:
+        resultData:
+          type: array
+          items:
+            type: string
+            example: USD
+    ConversionResponse:
+      anyOf:
+        - $ref: '#/components/schemas/ApiResponse'
+      type: object
+      required:
+        - resultData
+      properties:
+        resultData:
+          type: object
+          required:
+            - fromCurrency
+            - toCurrency
+            - amount
+            - convertedAmount
+          properties:
+            fromCurrency:
+              type: string
+              example: PHP
+            toCurrency:
+              type: string
+              example: USD
+            amount:
+              type: number
+              example: 1.0
+            convertedAmount:
+              type: number
+              example: 0.028269
+            conversionHistory:
+              type: string
+              example: 2022-06-11
+    InvalidConversionResponse:
+      anyOf:
+        - $ref: '#/components/schemas/ApiResponse'
+      type: object
+      required:
+        - resultMessage
+      properties:
+        resultMessage:
+          type: string
+          example: Invalid conversion.
+        resultData:
+          type: object

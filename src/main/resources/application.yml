@@ -1,12 +1,17 @@
 server:
   servlet:
     port: 8080
+    context-path: /fxrates
 
 jasypt:
   encryptor:
-    password: hell0World
+    password: martrustAssessment
     algorithm: PBEWithMD5AndDES
     iv-generator-classname: org.jasypt.iv.NoIvGenerator
 
 fxrates:
-  apiKey: ENC(5NX3pt7SoUp3sK5q10Q3a8j5lveRxov1)
+  # Hosted API for https://exchangeratesapi.io/
+  # https://apilayer.com/marketplace/exchangerates_data-api?preview=true#documentation-tab
+  # Access key provided by ApiLayer
+  baseUrl: https://api.apilayer.com/exchangerates_data/
+  apiKey: ENC(ozNsxXdJIGPKsM8ggntsEiP98QHsoOT67cmEz+poiwHfaLcdIG4yMiM7k8FUhaDm)
