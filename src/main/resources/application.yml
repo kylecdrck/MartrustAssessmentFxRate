@@ -1,0 +1,12 @@
+server:
+  servlet:
+    port: 8080
+
+jasypt:
+  encryptor:
+    password: hell0World
+    algorithm: PBEWithMD5AndDES
+    iv-generator-classname: org.jasypt.iv.NoIvGenerator
+
+fxrates:
+  apiKey: ENC(5NX3pt7SoUp3sK5q10Q3a8j5lveRxov1)
