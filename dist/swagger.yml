@@ -155,7 +155,7 @@ components:
             convertedAmount:
               type: number
               example: 0.028269
-            conversionHistory:
+            conversionFromDate:
               type: string
               example: 2022-06-11
     InvalidConversionResponse:

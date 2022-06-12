@@ -13,4 +13,5 @@ import java.util.concurrent.ConcurrentHashMap;
 @ConfigurationProperties(prefix = "fxrates")
 public class FXRatesApiConfig {
     private String apiKey;
+    private String baseUrl;
 }
